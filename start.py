@@ -68,7 +68,7 @@ def getRequest(c, addr):
                         break
                 if bol:
                     a.append(x[0])
-        chk = '-'.join(a)
+        chk = ':'.join(a)
         c.send(chk.encode())
         data = c.recv(1024).decode()
         bol, dest = check(data, c)
