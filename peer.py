@@ -92,7 +92,7 @@ def newClient(dest, id):
 
 
 def reconect():
-    host = '10.70.235.104'
+    host = '10.70.235.101'
     port = 5000
     s = socket.socket()
     s.connect((host, port))
@@ -123,7 +123,7 @@ def check(files, name):
 
 
 if __name__ == '__main__':
-    host = '10.70.235.104'
+    host = '10.70.235.101'
     port = 5000
     s = socket.socket()
     s.connect((host, port))
