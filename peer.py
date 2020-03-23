@@ -49,7 +49,7 @@ def download(s):
         print(data)
         data = s.recv(2048).decode()
     print(data)
-    data = data.split('-')
+    data = data.split(':')
     dest = input("insert file name ")
     dest = check(data, dest)
     s.send(dest.encode())
