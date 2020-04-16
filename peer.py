@@ -2,6 +2,7 @@ import socket
 import os
 import threading
 value = []
+HOST = '10.70.235.101'
 
 def main(s):
     req = input("upload or download (u/d) or exit ")
@@ -46,7 +47,6 @@ def download(s):
     global value
     data = s.recv(1024).decode()
     if data == "waiting for more peers":
-        print(data)
         data = s.recv(2048).decode()
     print(data)
     data = data.split(':')
@@ -92,10 +92,9 @@ def newClient(dest, id):
 
 
 def reconect():
-    host = '10.70.235.101'
     port = 5000
     s = socket.socket()
-    s.connect((host, port))
+    s.connect((HOST, port))
     main(s)
 
 
@@ -123,8 +122,8 @@ def check(files, name):
 
 
 if __name__ == '__main__':
-    host = '10.70.235.101'
+    HOST = '10.70.235.101'
     port = 5000
     s = socket.socket()
-    s.connect((host, port))
+    s.connect((HOST, port))
     main(s)
