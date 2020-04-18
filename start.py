@@ -7,12 +7,11 @@ files = []
 
 
 def notify(dest, addr):
-    x = dest[2:]
     holders = []
     count = 0
-    for y in x:
+    for x in dest[2:]:
         count += 1
-        holders.append(y[0])
+        holders.append(x[0])
     start = 0
     chunks = int(int(dest[1]) / count)
     stop = chunks
@@ -76,10 +75,9 @@ def getRequest(c, addr):
         if bol:
             print("done")
             if notify(dest, addr):
-                x = dest[2:]
-                string = str(len(x))
-                for y in x:
-                    string += " " + y[1]
+                string = str(len(dest[2:]))
+                for x in dest[2:]:
+                    string += " " + x[1]
                 print(string)
                 c.send(string.encode())
         for x in files:
