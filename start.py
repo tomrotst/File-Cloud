@@ -2,7 +2,6 @@ import socket
 import threading
 HOST = '0.0.0.0'
 PORT = 5000
-peers = []
 files = []
 
 
@@ -40,7 +39,6 @@ def main():
     ser.listen(5)
     while True:
         c, addr = ser.accept()
-        peers.append([c, addr[0]])
         threading.Thread(target=getRequest, args=(c, addr[0])).start()
 
 
@@ -61,7 +59,7 @@ def getRequest(c, addr):
         while len(a) == 0:
             for x in files:
                 bol = True
-                for y in x[1:]:
+                for y in x[2:]:
                     if y[1] == addr:
                         bol = False
                         break
@@ -85,9 +83,10 @@ def getRequest(c, addr):
                 x.append([c, addr])
     else:
         c.close()
-        for x in peers:
-            if x[0] == c:
-                peers.remove(x)
+        for x in files:
+            for y in x[2:]:
+                if y[1] == addr:
+                    x.remove(y)
 
 
 if __name__ == "__main__":
