@@ -68,6 +68,7 @@ def download(s):
         for i in value:
             if i[1] == index:
                 string += i[0]
+                value.remove(i)
                 break
         index += 1
     file = open(dest, 'wb')
@@ -86,7 +87,6 @@ def newClient(dest, id):
     while received[-4:] != b'done':
         received += c.recv(1024)
     received = received[:-4]
-    received = received
     value.append([received, id])
     c.close()
 
