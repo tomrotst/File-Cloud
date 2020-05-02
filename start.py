@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 HOST = '0.0.0.0'
 PORT = 5000
 files = []
@@ -16,13 +17,17 @@ def notify(dest, addr):
     stop = chunks
     i = 1
     for a in holders:
-        a.send(("begin " + addr + " " + str(start) + " " + str(stop)).encode())
-        start = stop
-        if i == count:
-            stop = int(dest[1])-1
-        else:
-            stop += chunks
-        i += 1
+        try:
+            print("AAAA")
+            a.send(("begin " + addr + " " + str(start) + " " + str(stop)).encode())
+            start = stop
+            if i == count:
+                stop = int(dest[1])-1
+            else:
+                stop += chunks
+            i += 1
+        except:
+            continue
     return True
 
 
@@ -38,36 +43,65 @@ def main():
     ser.bind((HOST, PORT))
     ser.listen(5)
     while True:
-        c, addr = ser.accept()
-        threading.Thread(target=getRequest, args=(c, addr[0])).start()
+        try:
+            c, addr = ser.accept()
+            threading.Thread(target=getRequest, args=(c, addr[0])).start()
+        except:
+            continue
 
 
 def getRequest(c, addr):
-    data = c.recv(1024).decode()
+    print("a")
+    try:
+        data = c.recv(1).decode()
+        print(data)
+    except:
+        c.close()
+        remove(addr)
+        return
     if data == "u":
-        data = c.recv(1024).decode().split("\\")
+        print("b")
+        try:
+            data = c.recv(1024).decode()
+            print(data)
+            data = data.split(":")
+            print(data)
+        except:
+            print("error")
+            remove(addr)
+            return
         name = data[0]
         size = data[1]
         files.append([name, size, [c, addr]])
         print(addr)
     elif data == "d":
-        c.send("waiting for more peers".encode())
-        while len(files) == 0:
-            if len(files) > 0:
-                break
+        print("got in")
         a = []
-        while len(a) == 0:
-            for x in files:
-                bol = True
-                for y in x[2:]:
-                    if y[1] == addr:
-                        bol = False
-                        break
-                if bol:
-                    a.append(x[0])
+        for x in files:
+            bol = True
+            for y in x[2:]:
+                if y[1] == addr:
+                    bol = False
+                    break
+            if bol:
+                a.append(x[0])
         chk = ':'.join(a)
-        c.send(chk.encode())
-        data = c.recv(1024).decode()
+        try:
+            print(chk)
+            if chk == "":
+                print("send empty")
+                c.send("empty".encode())
+                print("exiting")
+                return
+            else:
+                c.send(chk.encode())
+                print("e")
+                data = c.recv(1024).decode()
+                print("f")
+        except:
+            print("wrong")
+            remove(addr)
+            return
         bol, dest = check(data, c)
         print("checking")
         if bol:
@@ -77,17 +111,35 @@ def getRequest(c, addr):
                 for x in dest[2:]:
                     string += " " + x[1]
                 print(string)
-                c.send(string.encode())
+                try:
+                    c.send(string.encode())
+                except:
+                    remove(addr)
+                    return
+                try:
+                    data = c.recv(1024).decode()
+                    print(data)
+                except:
+                    print("error")
+                    remove(addr)
+                    return
         for x in files:
             if x[0] == data:
+                print("appended" + data)
                 x.append([c, addr])
     else:
         c.close()
-        for x in files:
-            for y in x[2:]:
-                if y[1] == addr:
-                    x.remove(y)
+        remove(addr)
+
+
+def remove(addr):
+    for x in files:
+        for y in x[2:]:
+            if y[1] == addr:
+                x.remove(y)
 
 
 if __name__ == "__main__":
+    print('STARTED')
     main()
+
