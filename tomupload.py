@@ -35,6 +35,7 @@ def vp_start_gui(first_time=False):
     root = tk.Tk()
     top = Toplevel1 (root)
     tomupload_support.init(root, top)
+    # Keep gui alive by updating while user didnt select
     while not return_values:
         try:
             root.update()
@@ -45,7 +46,9 @@ def vp_start_gui(first_time=False):
     else:
         root.destroy()
     print('OUT')
+    # Var reset   VVVVV
     return_values = False
+    # Return back
     return entry_values[0]
 
 
@@ -163,12 +166,14 @@ class Toplevel1:
 
 # TODO CHANGE FILETYPES IF YOU WANT TO INCLUD VIDS AND OTHER FILES
 def get_browser(entry):
+    # Launch file explorer window
     file_browse_path = fd.askopenfilename(initialdir=r"C:\Users",)
     entry.delete(0, "end")
     entry.insert(0, file_browse_path)
 
 
 def pass_back_path(entry):
+    # Take the selection from a list and pass it back through another list
     global entry_values
     global return_values
     print("TEST")

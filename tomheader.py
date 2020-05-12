@@ -14,12 +14,14 @@ except ImportError:
 import tomupload
 import tomdownload
 from os import path
+import os
 import peer
 import socket
 import tomheader_support
 
+# Vars
 value = []
-HOST = '10.70.235.114'
+HOST = '10.70.235.181'
 port = 5000
 w = None
 
@@ -37,8 +39,13 @@ PASSED_FILE = ""
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global val, w, root
+    newpath = "files"
+    # Create library path
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
     root = tk.Tk()
     top = Toplevel1(root)
+    root.resizable(width=False, height=False)
     tomheader_support.init(root, top)
     root.mainloop()
 
@@ -83,7 +90,7 @@ class Toplevel1:
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
 
-        top.geometry("600x296+370+153")
+        top.geometry("600x337+370+153")
         top.minsize(120, 1)
         top.maxsize(1364, 749)
         top.resizable(1, 1)
@@ -106,7 +113,7 @@ class Toplevel1:
         self.Label1.configure(text='''Filecloud''')
 
         self.Button1 = tk.Button(top)
-        self.Button1.place(relx=0.583, rely=0.608, height=54, width=187)
+        self.Button1.place(relx=0.583, rely=0.55, height=54, width=187)
         self.Button1.configure(activebackground="#ececec")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#EA9A19")
@@ -122,7 +129,7 @@ class Toplevel1:
         self.Button1.configure(command=launch_download)
 
         self.Button1_1 = tk.Button(top)
-        self.Button1_1.place(relx=0.1, rely=0.608, height=54, width=187)
+        self.Button1_1.place(relx=0.1, rely=0.55, height=54, width=187)
         self.Button1_1.configure(activebackground="#ececec")
         self.Button1_1.configure(activeforeground="#000000")
         self.Button1_1.configure(background="#34D03C")
@@ -153,7 +160,7 @@ class Toplevel1:
         top.configure(menu = self.menubar)
 
         self.Label2_1 = tk.Label(top)
-        self.Label2_1.place(relx=0.533, rely=0.811, height=21, width=244)
+        self.Label2_1.place(relx=0.533, rely=0.74, height=21, width=244)
         self.Label2_1.configure(activebackground="#f9f9f9")
         self.Label2_1.configure(activeforeground="black")
         self.Label2_1.configure(background="#0A3252")
@@ -165,7 +172,7 @@ class Toplevel1:
         self.Label2_1.configure(text='''Download a file from the server''')
 
         self.Label2_2 = tk.Label(top)
-        self.Label2_2.place(relx=0.05, rely=0.811, height=21, width=244)
+        self.Label2_2.place(relx=0.05, rely=0.74, height=21, width=244)
         self.Label2_2.configure(activebackground="#f9f9f9")
         self.Label2_2.configure(activeforeground="black")
         self.Label2_2.configure(background="#0A3252")
@@ -176,15 +183,36 @@ class Toplevel1:
         self.Label2_2.configure(highlightcolor="black")
         self.Label2_2.configure(text='''Upload a local file to the cloud''')
 
+        self.Button2 = tk.Button(top)
+        self.Button2.place(relx=0.233, rely=0.861, height=44, width=317)
+        self.Button2.configure(activebackground="#6c6c6c")
+        self.Button2.configure(activeforeground="white")
+        self.Button2.configure(activeforeground="#000000")
+        self.Button2.configure(background="#0a3252")
+        self.Button2.configure(disabledforeground="#0a3252")
+        self.Button2.configure(font="-family {Arial} -size 14")
+        self.Button2.configure(foreground="#ffffff")
+        self.Button2.configure(highlightbackground="#0a3252")
+        self.Button2.configure(highlightcolor="black")
+        self.Button2.configure(pady="0")
+        self.Button2.configure(relief="flat")
+        self.Button2.configure(text='''BROWSE DOWNLOAD LIBRARY''')
+        self.Button2.configure(command=launch_explorer)
+
     def update_output(self, output, colour):
         self.Label2.configure(text=output)
         self.Label2.configure(foreground=colour)
         update_root()
 
 
+def launch_explorer():
+    os.startfile("files")
+
+
 def launch_upload():
     global first_time
     root.withdraw()
+    # Start upload window gui and recieve here the user selection
     file_path = tomupload.vp_start_gui(first_time)
     try:
         file_path = file_path.replace("/", "\\")
@@ -194,42 +222,46 @@ def launch_upload():
         first_time = False
     root.deiconify()
     print("GOT FILE PATH " + file_path)
-
-    # TODO CHECK IF FILE_PATH IS VALID IF NOT USE tomerror.output_error(ERROR MESSAGE) to output error
     if not path.exists(file_path):
         tomheader_support.update_feedback('The file does not exist', '#D5212E')
         return
     else:
         tomheader_support.update_feedback('The selected file is being uploaded', '#34d03c')
+    # Start uploading
     server_manage_upload(file_path)
 
 
 def launch_download():
     global first_time
     global PASSED_FILE
-    # root.withdraw()
-    # file_select = tomdownload.vp_start_gui(first_time)
     root.withdraw()
-    PASSED_FILE, s = tomdownload.vp_start_gui(first_time)
+    try:
+        # Start second gui window and get the selection back
+        PASSED_FILE, s = tomdownload.vp_start_gui(first_time)
+    except:
+        return
     if first_time:
         first_time = False
     root.deiconify()
+    # Letting tomdownload know file has been passed to this program
     tomdownload.has_files_been_passed = False
     if first_time:
         first_time = False
     if PASSED_FILE != "empty":
-        # root.deiconify()
+        # If file is valid start download
         print("GOT FILE SELECTED " + PASSED_FILE)
         tomheader_support.update_feedback(PASSED_FILE + ' is being downloaded', '#34d03c')
         peer.new_download(s, PASSED_FILE)
         PASSED_FILE = ""
     else:
+        # If no files in the cloud right now
         s.close()
         tomheader_support.update_feedback('no files uploaded yet', '#34d03c')
         PASSED_FILE = ""
 
 
 def server_manage_upload(f_path):
+    # Establishing connection before starting the server
     s = socket.socket()
     try:
         s.connect((HOST, port))

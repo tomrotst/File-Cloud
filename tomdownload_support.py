@@ -21,7 +21,7 @@ except ImportError:
     py3 = True
     
 value = []
-HOST = "10.70.235.114"
+HOST = "10.70.235.181"
 port = 5000
 
 

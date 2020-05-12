@@ -2,32 +2,34 @@ import socket
 import os
 import threading
 value = []
-HOST = '10.70.235.114'
+HOST = '10.70.235.181'
 port = 5000
 
 
-# TODO
+
 def main_new(s, req, var):
+    #main function used to send which action is desired to server
     print('MAIN NEW ENTERED')
     if req == "exit":
         s.send(req.encode())
-        exit()
+        return
     elif req == "u":
         try:
             s.send(req.encode())
             upload_new(s, var)
         except:
             print("connection aborted")
-            exit()
+            return
     elif req == "d":
         try:
             new_download(s, var)
         except:
             print("connection aborted")
-            exit()
+            return
 
 
 def upload_new(s, file):
+    #uploading new file to server
     print('UPLOAD NEW ENTERED')
     name = file.split("\\")[-1]
     print(name)
@@ -37,12 +39,13 @@ def upload_new(s, file):
         s.send((name + ":" + str(sz)).encode())
     except IOError:
         print("connection aborted")
-        exit()
+        return
     print(file)
     threading.Thread(target=newFile_new, args=(s, file)).start()
 
 
 def newFile_new(s, file):
+    #waiting for download requests for file
     print('NEWFILE NEW ENTERED')
     while True:
         data = ''
@@ -50,16 +53,18 @@ def newFile_new(s, file):
             data = s.recv(1024).decode()
         except IOError:
             print("connection aborted")
-            exit()
+            return
         print(data + "sdf")
         data = data.split()
         try:
+            #newServer(destination, startBit, endBit, filePath)
             newServer(data[1], data[2], data[3], file)
         except IOError:
-            exit()
+            return
 
 
 def new_download(s, file_sad):
+    #recieving files that have been uploaded and sending the desired file
     global value
     data = ''
     dest = ''
@@ -71,7 +76,7 @@ def new_download(s, file_sad):
         data = data.split()
     except IOError:
         print("connection aborted")
-        exit()
+        return
     value = []
     i = 1
     for x in data[1:]:
@@ -91,8 +96,6 @@ def new_download(s, file_sad):
                 break
         index += 1
     newpath = "files"
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
     s.send(("done "+dest).encode())
     file = open(newpath + "\\" + dest, 'wb')
     file.write(string)
@@ -101,6 +104,7 @@ def new_download(s, file_sad):
 
 
 def newClient(dest, id):
+    #receiving file or a chunk of the file from another peer
     global value
     port = 5050
     print("started")
@@ -110,7 +114,7 @@ def newClient(dest, id):
         received = c.recv(1024)
     except IOError:
         print("connection aborted")
-        exit()
+        return
     while received[-4:] != b'done':
         received += c.recv(1024)
     received = received[:-4]
@@ -119,6 +123,7 @@ def newClient(dest, id):
 
 
 def newServer(dest, start, stop, file):
+    #sending file or a chunk of the file to another peer
     print("newServer " + dest)
     with open(file, 'rb') as the_file:
         my_string = the_file.read()[int(start):int(stop)]
@@ -138,11 +143,3 @@ def newServer(dest, start, stop, file):
     except:
         c.close()
     print("done with upload")
-
-
-def check(files, name):
-    for x in files:
-        if name == x:
-            return name
-    print("not in list")
-    return check(files, input("insert file name "))

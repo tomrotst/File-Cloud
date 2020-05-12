@@ -20,7 +20,9 @@ except ImportError:
 
 import tomdownload_support
 
+
 has_files_been_passed = True
+# VVVVVVVVVVV      Var that lets program know there is a value in a list that should be passed
 return_values = False
 entry_values = []
 
@@ -35,10 +37,12 @@ def vp_start_gui(first_time=False):
     root = tk.Tk()
     top = Toplevel1(root)
     tomdownload_support.init(root, top)
+    # VVVVVVVVVVVVVVVVVV      Gets list of files in the cloud through socket. gives socket back
     s, var = tomdownload_support.insert_bots()
     if not var:
         print("destroyed")
         return "empty", s
+    # Keep alive while user selects
     while not return_values:
         try:
             root.update()
@@ -49,8 +53,10 @@ def vp_start_gui(first_time=False):
     else:
         root.destroy()
     print('OUT')
+     # VAR RESET    VVVVVVV
     return_values = False
     print(entry_values[0] + " ---> SELECTION")
+    # Pass back
     return entry_values[0], s
 
 
@@ -167,10 +173,14 @@ class Toplevel1:
 
 
 def return_selected_file(listbox):
+    # Take selected file from list and pass back through list
+    # RUNS WHEN CLICKED ON SUBMIT
     global entry_values
     global return_values
+    # If no ne selected exit
     if not listbox.curselection():
         return
+    # Passing to list
     entry_values.append(listbox.get(listbox.curselection()))
     return_values = True
 
