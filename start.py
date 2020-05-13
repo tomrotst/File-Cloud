@@ -111,7 +111,7 @@ def getRequest(c, addr):
             print("done")
             temp = notify(dest, addr)
             string = str(len(temp))
-            string += " " + ' '.join(notify(dest, addr))
+            string += " " + ' '.join(temp)
             print(string)
             #sends list of ips of holders to peer requesting download
             try:
