@@ -21,7 +21,7 @@ import tomheader_support
 
 # Vars
 value = []
-HOST = '10.70.235.181'
+HOST = '10.70.235.114'
 port = 5000
 w = None
 
