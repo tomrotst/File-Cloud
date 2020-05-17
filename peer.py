@@ -50,6 +50,12 @@ def newFile_new(s, file):
     while True:
         data = ''
         try:
+            data = s.recv(8).decode()
+            print data
+        except IOError:
+            print("connection aborted")
+            return
+        try:
             data = s.recv(1024).decode()
         except IOError:
             print("connection aborted")
