@@ -11,9 +11,13 @@ def notify(dest, addr):
     return_list = []
     count = 0
     for x in dest[2:]:
-        count += 1
-        holders.append(x[0])
-        return_list.append(x[1])
+        try:
+            x[0].send("checking".encode())
+            holders.append(x[0])
+            return_list.append(x[1])
+            count += 1
+        except:
+            continue
     start = 0
     chunks = int(int(dest[1]) / count)
     stop = chunks
