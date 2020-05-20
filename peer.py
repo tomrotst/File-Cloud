@@ -51,7 +51,7 @@ def newFile_new(s, file):
         data = ''
         try:
             data = s.recv(8).decode()
-            print data
+            print(data)
         except IOError:
             print("connection aborted")
             return
