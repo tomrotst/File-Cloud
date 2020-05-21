@@ -83,19 +83,23 @@ def new_download(s, file_sad):
     except IOError:
         print("connection aborted")
         return
-    value = []
+    value = [True]
     i = 1
     for x in data[1:]:
         print(x)
         threading.Thread(target=newClient, args=(x, i)).start()
         i += 1
     while True:
-        if len(value) == int(data[0]):
+        if value[0] == False:
+            s.send(("done "+dest).encode())
+            print("error with download")
+            return
+        if len(value)-1 == int(data[0]):
             break
     string = b""
     index = 1
     while index <= int(data[0]):
-        for i in value:
+        for i in value[1:]:
             if i[1] == index:
                 string += i[0]
                 value.remove(i)
@@ -119,10 +123,18 @@ def newClient(dest, id):
         c.connect((dest, port))
         received = c.recv(1024)
     except IOError:
+        value[0] = False
         print("connection aborted")
         return
     while received[-4:] != b'done':
-        received += c.recv(1024)
+        if value[0] == False:
+            return
+        try:
+            received += c.recv(1024)
+            except:
+                value[0] = False
+                print("connection aborted")
+                return
     received = received[:-4]
     value.append([received, id])
     c.close()
