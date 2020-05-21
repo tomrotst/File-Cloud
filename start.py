@@ -131,11 +131,15 @@ def getRequest(c, addr):
                 print("error")
                 remove(addr)
                 return
-        #adds peer to list of file holders
-        for x in files:
-            if x[0] == data:
-                print("appended" + data)
-                x.append([c, addr])
+        message = message.split()
+        if message[0] == "done":
+            #adds peer to list of file holders
+            for x in files:
+                if x[0] == data:
+                    print("appended" + data)
+                    x.append([c, addr])
+        elif message[0] == "error":
+            print("error occured with download of" + message[1])
     else:
         c.close()
         remove(addr)
