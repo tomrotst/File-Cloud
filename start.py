@@ -17,6 +17,7 @@ def notify(dest, addr):
             return_list.append(x[1])
             count += 1
         except:
+            remove(x[1])
             continue
     start = 0
     chunks = int(int(dest[1]) / count)
