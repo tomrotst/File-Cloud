@@ -91,7 +91,7 @@ def new_download(s, file_sad):
         i += 1
     while True:
         if value[0] == False:
-            s.send(("done "+dest).encode())
+            s.send(("error "+dest).encode())
             print("error with download")
             return
         if len(value)-1 == int(data[0]):
@@ -131,10 +131,10 @@ def newClient(dest, id):
             return
         try:
             received += c.recv(1024)
-            except:
-                value[0] = False
-                print("connection aborted")
-                return
+        except:
+            value[0] = False
+            print("connection aborted")
+            return
     received = received[:-4]
     value.append([received, id])
     c.close()
