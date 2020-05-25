@@ -14,6 +14,7 @@ except ImportError:
 import tomupload
 import tomdownload
 from os import path
+import config
 import os
 import peer
 import socket
@@ -21,8 +22,8 @@ import tomheader_support
 
 # Vars
 value = []
-HOST = '10.70.235.114'
-port = 5000
+HOST = config.HOST
+port = config.PORT
 w = None
 
 try:

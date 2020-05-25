@@ -10,9 +10,8 @@ try:
     import Tkinter as tk
 except ImportError:
     import tkinter as tk
-
 import socket
-
+import config
 try:
     import ttk
     py3 = False
@@ -21,8 +20,8 @@ except ImportError:
     py3 = True
     
 value = []
-HOST = "10.70.235.114"
-port = 5000
+HOST = config.HOST
+port = config.PORT
 
 
 def init(top, gui, *args, **kwargs):

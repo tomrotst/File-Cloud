@@ -1,9 +1,9 @@
 import socket
-import os
+import config
 import threading
 value = []
-HOST = '10.70.235.114'
-port = 5000
+HOST = config.HOST
+port = config.PORT
 
 
 
