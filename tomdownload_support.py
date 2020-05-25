@@ -24,7 +24,7 @@ HOST = config.HOST
 port = config.PORT
 
 
-def init(top, gui, *args, **kwargs):
+def init(top, gui):
     global w, top_level, root
     w = gui
     top_level = top

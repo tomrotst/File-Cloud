@@ -22,7 +22,7 @@ import tomdownload_support
 
 
 has_files_been_passed = True
-# VVVVVVVVVVV      Var that lets program know there is a value in a list that should be passed
+# Var that lets program know there is a value in a list that should be passed
 return_values = False
 entry_values = []
 
@@ -37,7 +37,7 @@ def vp_start_gui(first_time=False):
     root = tk.Tk()
     top = Toplevel1(root)
     tomdownload_support.init(root, top)
-    # VVVVVVVVVVVVVVVVVV      Gets list of files in the cloud through socket. gives socket back
+    # Gets list of files in the cloud through socket. gives socket back
     s, var = tomdownload_support.insert_bots()
     if not var:
         print("destroyed")
@@ -53,7 +53,7 @@ def vp_start_gui(first_time=False):
     else:
         root.destroy()
     print('OUT')
-     # VAR RESET    VVVVVVV
+    # VAR RESET
     return_values = False
     print(entry_values[0] + " ---> SELECTION")
     # Pass back
@@ -71,7 +71,6 @@ def update_root():
         return
 
 
-
 def create_Toplevel1(root, *args, **kwargs):
     '''Starting point when module is imported by another program.'''
     global w, w_win, rt
@@ -79,12 +78,14 @@ def create_Toplevel1(root, *args, **kwargs):
     w = tk.Toplevel (root)
     top = Toplevel1 (w)
     tomdownload_support.init(w, top, *args, **kwargs)
-    return (w, top)
+    return w, top
+
 
 def destroy_Toplevel1():
     global w
     w.destroy()
     w = None
+
 
 class Toplevel1:
     def __init__(self, top=None):

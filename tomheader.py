@@ -213,7 +213,7 @@ def launch_explorer():
 def launch_upload():
     global first_time
     root.withdraw()
-    # Start upload window gui and recieve here the user selection
+    # Start upload window gui and receive the user selection
     file_path = tomupload.vp_start_gui(first_time)
     try:
         file_path = file_path.replace("/", "\\")

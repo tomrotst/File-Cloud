@@ -33,9 +33,9 @@ def vp_start_gui(first_time=False):
     entry_values = []
     return_values = False
     root = tk.Tk()
-    top = Toplevel1 (root)
+    top = Toplevel1(root)
     tomupload_support.init(root, top)
-    # Keep gui alive by updating while user didnt select
+    # Keep gui alive by updating while user didn't select
     while not return_values:
         try:
             root.update()
@@ -46,7 +46,7 @@ def vp_start_gui(first_time=False):
     else:
         root.destroy()
     print('OUT')
-    # Var reset   VVVVV
+    # Var reset
     return_values = False
     # Return back
     return entry_values[0]
@@ -70,15 +70,16 @@ def destroy_Toplevel1():
     w.destroy()
     w = None
 
+
 class Toplevel1:
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = '#d9d9d9' # X11 color: 'gray85'
-        _ana1color = '#d9d9d9' # X11 color: 'gray85'
-        _ana2color = '#ececec' # Closest X11 color: 'gray92'
+        _compcolor = '#d9d9d9'  # X11 color: 'gray85'
+        _ana1color = '#d9d9d9'  # X11 color: 'gray85'
+        _ana2color = '#ececec'  # Closest X11 color: 'gray92'
 
         top.geometry("600x296+370+153")
         top.minsize(120, 1)
@@ -131,7 +132,7 @@ class Toplevel1:
         self.Label2.configure(text='''Please select the path to the fie you would like you upload''')
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+        top.configure(menu=self.menubar)
 
         self.Entry1 = tk.Entry(top)
         self.Entry1.place(relx=0.067, rely=0.507,height=40, relwidth=0.64)
@@ -161,7 +162,7 @@ class Toplevel1:
         self.Button1_2.configure(pady="0")
         self.Button1_2.configure(relief="flat")
         self.Button1_2.configure(text='''BROWSE''')
-        self.Button1_2.configure(command=lambda:get_browser(self.Entry1))
+        self.Button1_2.configure(command=lambda: get_browser(self.Entry1))
 
 
 # TODO CHANGE FILETYPES IF YOU WANT TO INCLUD VIDS AND OTHER FILES
