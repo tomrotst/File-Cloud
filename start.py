@@ -6,7 +6,7 @@ files = []
 
 
 def notify(dest, addr):
-    #notifiting holders of the file to accept the download request from the peer returns list of ips of active holders
+    # notifying holders of the file to accept the download request from the peer returns list of ips of active holders
     holders = []
     return_list = []
     count = 0
@@ -26,7 +26,7 @@ def notify(dest, addr):
     for a in holders:
         try:
             print("AAAA")
-            #sends begin ip startBit endBit
+            # sends begin ip startBit endBit
             a.send(("begin " + addr + " " + str(start) + " " + str(stop)).encode())
             start = stop
             if i == count:
@@ -40,7 +40,7 @@ def notify(dest, addr):
 
 
 def check(data, c):
-    #checks if peer already has the file and returns the appropriate cell in the files list
+    # checks if peer already has the file and returns the appropriate cell in the files list
     for i in files:
         if data == i[0] and i[2][0] != c:
             return True, i
@@ -48,7 +48,7 @@ def check(data, c):
 
 
 def main():
-    #main function for accepting new peers
+    # main function for accepting new peers
     ser = socket.socket()
     ser.bind((HOST, PORT))
     ser.listen(5)
@@ -61,7 +61,7 @@ def main():
 
 
 def getRequest(c, addr):
-    #recieving request from peer
+    # recieving request from peer
     try:
         data = c.recv(1).decode()
         print(data)
@@ -70,7 +70,7 @@ def getRequest(c, addr):
         remove(addr)
         return
     if data == "u":
-        #received upload
+        # received upload
         try:
             data = c.recv(1024).decode()
             print(data)
@@ -85,7 +85,7 @@ def getRequest(c, addr):
         files.append([name, size, [c, addr]])
         print(addr)
     elif data == "d":
-        #received download
+        # received download
         a = []
         for x in files:
             bol = True
@@ -118,7 +118,7 @@ def getRequest(c, addr):
             string = str(len(temp))
             string += " " + ' '.join(temp)
             print(string)
-            #sends list of ips of holders to peer requesting download
+            # sends list of ips of holders to peer requesting download
             try:
                 c.send(string.encode())
             except:
@@ -132,22 +132,22 @@ def getRequest(c, addr):
                 print("error")
                 remove(addr)
                 return
-        message = message.split()
-        if message[0] == "done":
-            #adds peer to list of file holders
-            for x in files:
-                if x[0] == data:
-                    print("appended" + data)
-                    x.append([c, addr])
-        elif message[0] == "error":
-            print("error occured with download of" + message[1])
+            message = message.split()
+            if message[0] == "done":
+                # adds peer to list of file holders
+                for x in files:
+                    if x[0] == data:
+                        print("appended" + data)
+                        x.append([c, addr])
+            elif message[0] == "error":
+                print("error occurred with download of" + message[1])
     else:
         c.close()
         remove(addr)
 
 
 def remove(addr):
-    #removing peer from all instances in files list
+    # removing peer from all instances in files list
     for x in files:
         for y in x[2:]:
             if y[1] == addr:

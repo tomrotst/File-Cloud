@@ -6,9 +6,8 @@ HOST = config.HOST
 port = config.PORT
 
 
-
 def main_new(s, req, var):
-    #main function used to send which action is desired to server
+    # main function used to send which action is desired to server
     print('MAIN NEW ENTERED')
     if req == "exit":
         s.send(req.encode())
@@ -29,7 +28,7 @@ def main_new(s, req, var):
 
 
 def upload_new(s, file):
-    #uploading new file to server
+    # uploading new file to server
     print('UPLOAD NEW ENTERED')
     name = file.split("\\")[-1]
     print(name)
@@ -45,10 +44,9 @@ def upload_new(s, file):
 
 
 def newFile_new(s, file):
-    #waiting for download requests for file
+    # waiting for download requests for file
     print('NEWFILE NEW ENTERED')
     while True:
-        data = ''
         try:
             data = s.recv(8).decode()
             print(data)
@@ -63,17 +61,15 @@ def newFile_new(s, file):
         print(data + "sdf")
         data = data.split()
         try:
-            #newServer(destination, startBit, endBit, filePath)
+            # newServer(destination, startBit, endBit, filePath)
             newServer(data[1], data[2], data[3], file)
         except IOError:
             return
 
 
 def new_download(s, file_sad):
-    #recieving files that have been uploaded and sending the desired file
+    # receiving files that have been uploaded and sending the desired file then start the download process
     global value
-    data = ''
-    dest = ''
     try:
         dest = file_sad
         s.send(dest.encode())
@@ -83,14 +79,15 @@ def new_download(s, file_sad):
     except IOError:
         print("connection aborted")
         return
-    value = [True]
+    value.clear()
+    value.append(True)
     i = 1
     for x in data[1:]:
         print(x)
         threading.Thread(target=newClient, args=(x, i)).start()
         i += 1
     while True:
-        if value[0] == False:
+        if not value[0]:
             s.send(("error "+dest).encode())
             print("error with download")
             return
@@ -114,7 +111,7 @@ def new_download(s, file_sad):
 
 
 def newClient(dest, id):
-    #receiving file or a chunk of the file from another peer
+    # receiving file or a chunk of the file from another peer
     global value
     port = 5050
     print("started")
@@ -127,7 +124,7 @@ def newClient(dest, id):
         print("connection aborted")
         return
     while received[-4:] != b'done':
-        if value[0] == False:
+        if not value[0]:
             return
         try:
             received += c.recv(1024)
@@ -141,7 +138,7 @@ def newClient(dest, id):
 
 
 def newServer(dest, start, stop, file):
-    #sending file or a chunk of the file to another peer
+    # sending file or a chunk of the file to another peer
     print("newServer " + dest)
     with open(file, 'rb') as the_file:
         my_string = the_file.read()[int(start):int(stop)]
