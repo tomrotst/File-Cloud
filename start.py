@@ -152,6 +152,8 @@ def remove(addr):
         for y in x[2:]:
             if y[1] == addr:
                 x.remove(y)
+        if len(x)<3:
+            files.remove(x)
 
 
 if __name__ == "__main__":
