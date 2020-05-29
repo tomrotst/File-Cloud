@@ -113,11 +113,10 @@ def new_download(s, file_sad):
 def newClient(dest, id):
     # receiving file or a chunk of the file from another peer
     global value
-    port = 5050
     print("started")
     c = socket.socket()
     try:
-        c.connect((dest, port))
+        c.connect((dest, 5050)
         received = c.recv(1024)
     except IOError:
         value[0] = False
@@ -143,7 +142,7 @@ def newServer(dest, start, stop, file):
     with open(file, 'rb') as the_file:
         my_string = the_file.read()[int(start):int(stop)]
     ser = socket.socket()
-    ser.bind(("0.0.0.0", 5050))
+    ser.bind(("0.0.0.0", 0))
     print("started accept")
     ser.listen(5)
     print("accept 1")
