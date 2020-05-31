@@ -116,7 +116,7 @@ def newClient(dest, id):
     print("started")
     c = socket.socket()
     try:
-        c.connect((dest, 5050)
+        c.connect((dest, 5050))
         received = c.recv(1024)
     except IOError:
         value[0] = False
@@ -142,7 +142,7 @@ def newServer(dest, start, stop, file):
     with open(file, 'rb') as the_file:
         my_string = the_file.read()[int(start):int(stop)]
     ser = socket.socket()
-    ser.bind(("0.0.0.0", 0))
+    ser.bind(("0.0.0.0", 5050))
     print("started accept")
     ser.listen(5)
     print("accept 1")
